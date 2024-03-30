@@ -1,5 +1,6 @@
 <script setup>
-import { useUserStore } from '@/stores/user.js'
+import { useUserStore, useCounterStore } from '@/stores'
+
 import { useRoute, useRouter } from 'vue-router'
 // 在 Vue3 CompositionAPI 中
 // 1. 获取路由对象 router  useRouter
@@ -15,6 +16,7 @@ const goList = () => {
 }
 
 const userStore = useUserStore()
+const counterStore = useCounterStore()
 </script>
 
 <template>
@@ -38,7 +40,12 @@ const userStore = useUserStore()
       登录
     </el-button>
     <el-button @click="userStore.removeToken()">登出</el-button>
+
+    <hr />
+    <p>{{ counterStore.counter }}</p>
+    <el-button @click="counterStore.add(5)">数值+5</el-button>
   </div>
 </template>
 
 <style scoped></style>
+@/stores/modules/user.js
