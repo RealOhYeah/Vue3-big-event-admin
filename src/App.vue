@@ -1,4 +1,5 @@
 <script setup>
+import { useUserStore } from '@/stores/user.js'
 import { useRoute, useRouter } from 'vue-router'
 // 在 Vue3 CompositionAPI 中
 // 1. 获取路由对象 router  useRouter
@@ -12,13 +13,31 @@ const goList = () => {
   router.push('/list')
   console.log(router, route)
 }
+
+const userStore = useUserStore()
 </script>
 
 <template>
   <div>
     我是App
-    <button @click="$router.push('/home')">跳首页</button>
-    <button @click="goList">跳列表页</button>
+    <el-button @click="$router.push('/home')">跳首页</el-button>
+    <el-button @click="goList">跳列表页</el-button>
+    <div>
+      <el-button type="primary">Primary</el-button>
+      <el-button type="success">Success</el-button>
+      <el-button type="info">Info</el-button>
+      <el-button type="warning">Warning</el-button>
+      <el-button type="danger">Danger</el-button>
+    </div>
+    <hr />
+    <test-demo></test-demo>
+    <hr />
+
+    <p>{{ userStore.token }}</p>
+    <el-button @click="userStore.setToken('123456789123463435234453324')">
+      登录
+    </el-button>
+    <el-button @click="userStore.removeToken()">登出</el-button>
   </div>
 </template>
 
