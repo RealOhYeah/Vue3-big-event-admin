@@ -2,19 +2,25 @@
  * @Author: Oh...Yeah!!! 614988210@qq.com
  * @Date: 2024-04-01 10:34:39
  * @LastEditors: Oh...Yeah!!! 614988210@qq.com
- * @LastEditTime: 2024-04-06 22:31:20
+ * @LastEditTime: 2024-04-07 16:18:12
  * @FilePath: \Vue3-big-event-admin\src\views\login\LoginPage.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <script setup>
 import { User, Lock } from '@element-plus/icons-vue'
 import { ref } from 'vue'
+import { userRegisterService } from '@/api/user'
+import { ElMessage } from 'element-plus'
+
 const isRegister = ref(true)
 const formModel = ref({
   username: '',
   password: '',
   repassword: ''
 })
+
+const form = ref()
+
 const rules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -46,6 +52,16 @@ const rules = {
       trigger: 'blur'
     }
   ]
+}
+
+const register = async () => {
+  console.log('开始注册校验')
+  await form.value.validate()
+  console.log('开始注册请求')
+  await userRegisterService(formModel.value)
+  // console.log('注册请求结束')
+  ElMessage.success('注册成功')
+  isRegister.value = false
 }
 </script>
 
@@ -88,7 +104,12 @@ const rules = {
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="button" type="primary" auto-insert-space>
+          <el-button
+            @click="register"
+            class="button"
+            type="primary"
+            auto-insert-space
+          >
             注册
           </el-button>
         </el-form-item>

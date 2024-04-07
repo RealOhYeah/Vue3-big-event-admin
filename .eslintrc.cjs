@@ -1,3 +1,11 @@
+/*
+ * @Author: Oh...Yeah!!! 614988210@qq.com
+ * @Date: 2024-03-28 22:48:07
+ * @LastEditors: Oh...Yeah!!! 614988210@qq.com
+ * @LastEditTime: 2024-04-07 15:08:09
+ * @FilePath: \Vue3-big-event-admin\.eslintrc.cjs
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 /* eslint-env node */
 require('@rushstack/eslint-patch/modern-module-resolution')
 
@@ -36,5 +44,10 @@ module.exports = {
     'vue/no-setup-props-destructure': ['off'], // 关闭 props 解构的校验 (props解构丢失响应式)
     // 添加未定义变量错误提示，create-vue@3.6.3 关闭，这里加上是为了支持下一个章节演示。
     'no-undef': 'error'
+  },
+  globals: {
+    ElMessage: 'readonly',
+    ElMessageBox: 'readonly',
+    ElLoading: 'readonly'
   }
 }
