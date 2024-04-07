@@ -2,17 +2,19 @@
  * @Author: Oh...Yeah!!! 614988210@qq.com
  * @Date: 2024-04-01 10:34:39
  * @LastEditors: Oh...Yeah!!! 614988210@qq.com
- * @LastEditTime: 2024-04-07 16:18:12
+ * @LastEditTime: 2024-04-07 17:21:25
  * @FilePath: \Vue3-big-event-admin\src\views\login\LoginPage.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <script setup>
 import { User, Lock } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { userRegisterService } from '@/api/user'
 import { ElMessage } from 'element-plus'
+import { userLoginService } from '@/api/user'
+import { useUserStore } from '@/stores'
+import { useRouter } from 'vue-router'
 
-const isRegister = ref(true)
 const formModel = ref({
   username: '',
   password: '',
@@ -54,6 +56,8 @@ const rules = {
   ]
 }
 
+const isRegister = ref(false)
+
 const register = async () => {
   console.log('开始注册校验')
   await form.value.validate()
@@ -63,12 +67,33 @@ const register = async () => {
   ElMessage.success('注册成功')
   isRegister.value = false
 }
+
+// 监视注册和登录的切换，只要切换就重置表单
+watch(isRegister, () => {
+  formModel.value = {
+    username: '',
+    password: '',
+    repassword: ''
+  }
+})
+
+const userStore = useUserStore()
+const router = useRouter()
+
+const login = async () => {
+  await form.value.validate()
+  const res = await userLoginService(formModel.value)
+  userStore.setToken(res.data.token)
+  ElMessage.success('登录成功')
+  router.push('/')
+}
 </script>
 
 <template>
   <el-row class="login-page">
     <el-col :span="12" class="bg"></el-col>
     <el-col :span="6" :offset="3" class="form">
+      <!-- 注册表单 -->
       <el-form
         :model="formModel"
         :rules="rules"
@@ -119,15 +144,28 @@ const register = async () => {
           </el-link>
         </el-form-item>
       </el-form>
-      <el-form ref="form" size="large" autocomplete="off" v-else>
+      <!-- 登录表单 -->
+      <el-form
+        :model="formModel"
+        :rules="rules"
+        ref="form"
+        size="large"
+        autocomplete="off"
+        v-else
+      >
         <el-form-item>
           <h1>登录</h1>
         </el-form-item>
-        <el-form-item>
-          <el-input :prefix-icon="User" placeholder="请输入用户名"></el-input>
-        </el-form-item>
-        <el-form-item>
+        <el-form-item prop="username">
           <el-input
+            v-model="formModel.username"
+            :prefix-icon="User"
+            placeholder="请输入用户名"
+          ></el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            v-model="formModel.password"
             name="password"
             :prefix-icon="Lock"
             type="password"
@@ -141,7 +179,11 @@ const register = async () => {
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button class="button" type="primary" auto-insert-space
+          <el-button
+            @click="login"
+            class="button"
+            type="primary"
+            auto-insert-space
             >登录</el-button
           >
         </el-form-item>
