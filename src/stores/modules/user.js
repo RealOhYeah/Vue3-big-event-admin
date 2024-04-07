@@ -2,7 +2,7 @@
  * @Author: Oh...Yeah!!! 614988210@qq.com
  * @Date: 2024-03-30 16:59:24
  * @LastEditors: Oh...Yeah!!! 614988210@qq.com
- * @LastEditTime: 2024-04-07 19:43:51
+ * @LastEditTime: 2024-04-07 23:16:40
  * @FilePath: \Vue3-big-event-admin\src\stores\modules\user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -29,12 +29,17 @@ export const useUserStore = defineStore(
       user.value = res.data.data
     }
 
+    const setUser = (obj) => {
+      user.value = obj
+    }
+
     return {
       token,
       setToken,
       removeToken,
       user,
-      getUser
+      getUser,
+      setUser
     }
   },
   {
