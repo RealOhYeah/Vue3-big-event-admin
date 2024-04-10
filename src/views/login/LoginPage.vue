@@ -2,7 +2,7 @@
  * @Author: Oh...Yeah!!! 614988210@qq.com
  * @Date: 2024-04-01 10:34:39
  * @LastEditors: Oh...Yeah!!! 614988210@qq.com
- * @LastEditTime: 2024-04-07 19:18:05
+ * @LastEditTime: 2024-04-10 18:13:21
  * @FilePath: \Vue3-big-event-admin\src\views\login\LoginPage.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -82,6 +82,7 @@ const login = async () => {
   await form.value.validate()
   const res = await userLoginService(formModel.value)
   userStore.setToken(res.data.token)
+  console.log(res.data.token)
   ElMessage.success('登录成功')
   router.push('/')
 }

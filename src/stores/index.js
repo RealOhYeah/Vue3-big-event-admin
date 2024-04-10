@@ -21,3 +21,5 @@ export default pinia
 
 export * from './modules/user'
 export * from './modules/counter'
+
+export * from './modules/article'
