@@ -2,7 +2,7 @@
  * @Author: Oh...Yeah!!! 614988210@qq.com
  * @Date: 2024-04-01 10:36:22
  * @LastEditors: Oh...Yeah!!! 614988210@qq.com
- * @LastEditTime: 2024-04-10 22:49:54
+ * @LastEditTime: 2024-04-11 17:22:06
  * @FilePath: \Vue3-big-event-admin\src\views\article\ArticleChannel.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -10,8 +10,11 @@
 import { ref } from 'vue'
 import { Edit, Delete } from '@element-plus/icons-vue'
 import { artGetChannelsService } from '../../api/article.js'
+import ChannelEdit from './components/ChannelEdit.vue'
+
 const channelList = ref([])
 const loading = ref(false)
+const dialog = ref()
 
 const getChannelList = async () => {
   loading.value = true
@@ -19,19 +22,28 @@ const getChannelList = async () => {
   channelList.value = res.data.data
   loading.value = false
 }
+
 getChannelList()
-const onEditChannel = (row, $index) => {
-  console.log(row, $index)
-}
+
 const onDelChannel = (row, $index) => {
   console.log(row, $index)
+}
+
+const onEditChannel = (row) => {
+  dialog.value.open(row)
+}
+
+const onAddChannel = () => {
+  // console.log('???')
+  // console.log(dialog)
+  dialog.value.open({})
 }
 </script>
 
 <template>
   <page-container title="文章分类">
     <template #extra>
-      <el-button>添加分类</el-button>
+      <el-button @click="onAddChannel">添加分类</el-button>
     </template>
 
     <el-table v-loading="loading" :data="channelList" style="width: 100%">
@@ -61,6 +73,8 @@ const onDelChannel = (row, $index) => {
         <el-empty description="没有数据"></el-empty>
       </template>
     </el-table>
+
+    <channel-edit ref="dialog"></channel-edit>
   </page-container>
 </template>
 
