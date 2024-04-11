@@ -2,14 +2,17 @@
  * @Author: Oh...Yeah!!! 614988210@qq.com
  * @Date: 2024-04-01 10:36:22
  * @LastEditors: Oh...Yeah!!! 614988210@qq.com
- * @LastEditTime: 2024-04-11 20:03:51
+ * @LastEditTime: 2024-04-11 21:24:03
  * @FilePath: \Vue3-big-event-admin\src\views\article\ArticleChannel.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <script setup>
 import { ref } from 'vue'
 import { Edit, Delete } from '@element-plus/icons-vue'
-import { artGetChannelsService } from '../../api/article.js'
+import {
+  artGetChannelsService,
+  artDeleteChannelService
+} from '../../api/article.js'
 import ChannelEdit from './components/ChannelEdit.vue'
 
 const channelList = ref([])
@@ -25,8 +28,21 @@ const getChannelList = async () => {
 
 getChannelList()
 
-const onDelChannel = (row, $index) => {
-  console.log(row, $index)
+const onDelChannel = async (row) => {
+  // console.log(row.id)
+  await ElMessageBox.confirm('你确认删除该分类信息吗？', '温馨提示', {
+    type: 'warning',
+    confirmButtonText: '确认',
+    cancelButtonText: '取消'
+  })
+    .then(async () => {
+      await artDeleteChannelService(row.id)
+      ElMessage({ type: 'success', message: '删除成功' })
+      getChannelList()
+    })
+    .catch(() => {
+      ElMessage({ type: 'success', message: '删除已经取消' })
+    })
 }
 
 const onEditChannel = (row) => {
@@ -65,12 +81,13 @@ const onSuccess = () => {
             type="primary"
             @click="onEditChannel(row, $index)"
           ></el-button>
+
           <el-button
             :icon="Delete"
             circle
             plain
             type="danger"
-            @click="onDelChannel(row, $index)"
+            @click="onDelChannel(row)"
           ></el-button>
         </template>
       </el-table-column>
