@@ -2,7 +2,7 @@
  * @Author: Oh...Yeah!!! 614988210@qq.com
  * @Date: 2024-04-01 10:36:01
  * @LastEditors: Oh...Yeah!!! 614988210@qq.com
- * @LastEditTime: 2024-04-12 17:36:37
+ * @LastEditTime: 2024-04-12 17:48:23
  * @FilePath: \Vue3-big-event-admin\src\views\article\ArticleManage.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -19,8 +19,8 @@ const total = ref(0)
 const loading = ref(false)
 
 const params = ref({
-  pagenum: 2,
-  pagesize: 3,
+  pagenum: 1,
+  pagesize: 5,
   cate_id: '',
   state: ''
 })
@@ -50,6 +50,18 @@ const onCurrentChange = (page) => {
   params.value.pagenum = page
   getArticleList()
 }
+
+const onSearch = () => {
+  params.value.pagenum = 1
+  getArticleList()
+}
+const onReset = () => {
+  params.value.pagenum = 1
+  params.value.pagesize = 5
+  params.value.cate_id = ''
+  params.value.state = ''
+  getArticleList()
+}
 </script>
 
 <template>
@@ -69,8 +81,8 @@ const onCurrentChange = (page) => {
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">搜索</el-button>
-        <el-button>重置</el-button>
+        <el-button type="primary" @click="onSearch">搜索</el-button>
+        <el-button @click="onReset">重置</el-button>
       </el-form-item>
     </el-form>
 
