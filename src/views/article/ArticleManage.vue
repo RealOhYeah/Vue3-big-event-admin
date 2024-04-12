@@ -2,15 +2,15 @@
  * @Author: Oh...Yeah!!! 614988210@qq.com
  * @Date: 2024-04-01 10:36:01
  * @LastEditors: Oh...Yeah!!! 614988210@qq.com
- * @LastEditTime: 2024-04-12 00:03:28
+ * @LastEditTime: 2024-04-12 16:21:33
  * @FilePath: \Vue3-big-event-admin\src\views\article\ArticleManage.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 
 <script setup>
 import { ref } from 'vue'
-
 import { Edit, Delete } from '@element-plus/icons-vue'
+import ChannelSelect from '@/views/article/components/ChannelSelect.vue'
 
 const articleList = ref([
   {
@@ -28,6 +28,12 @@ const articleList = ref([
     cate_name: '体育'
   }
 ])
+const params = ref({
+  pagenum: 1,
+  pagesize: 5,
+  cate_id: '',
+  state: ''
+})
 
 const onEditArticle = (row) => {
   console.log(row)
@@ -45,13 +51,15 @@ const onDeleteArticle = (row) => {
 
     <el-form inline class="demo-form-inline">
       <el-form-item label="文章分类：">
-        <el-select>
-          <el-option label="新闻" value="111"></el-option>
-          <el-option label="体育" value="222"></el-option>
-        </el-select>
+        <channel-select v-model="params.cate_id"></channel-select>
       </el-form-item>
+
+      <!--
+        两种方式都可以 
+        <ChannelSelect></ChannelSelect>
+       -->
       <el-form-item label="发布状态：">
-        <el-select>
+        <el-select v-model="params.state">
           <el-option label="已发布" value="已发布"></el-option>
           <el-option label="草稿" value="草稿"></el-option>
         </el-select>
@@ -63,26 +71,6 @@ const onDeleteArticle = (row) => {
     </el-form>
 
     <el-table :data="articleList" style="width: 100%">
-      <!-- 方式一 -->
-      <!--
-        <el-table-column label="文章标题" width="400">
-         <template v-slot="scope">
-          <el-link type="primary" :underline="false">{{
-            scope.row.title
-          }}</el-link>
-        </template>
-       </el-table-column>
-      -->
-
-      <!-- 方式二 -->
-      <!--
-         <el-table-column label="文章标题" width="400">
-         <template #default="{ row }">
-          <el-link type="primary" :underline="false">{{ row.title }}</el-link>
-        </template> 
-         </el-table-column>
-      -->
-      <!-- 方式三 -->
       <el-table-column
         prop="title"
         label="文章标题"
@@ -117,11 +105,10 @@ const onDeleteArticle = (row) => {
 </template>
 
 <style>
-.demo-form-inline .el-input {
-  --el-input-width: 220px;
-}
-
 .demo-form-inline .el-select {
   --el-select-width: 220px;
+}
+.demo-form-inline {
+  display: flex;
 }
 </style>
