@@ -2,7 +2,7 @@
  * @Author: Oh...Yeah!!! 614988210@qq.com
  * @Date: 2024-04-01 10:36:01
  * @LastEditors: Oh...Yeah!!! 614988210@qq.com
- * @LastEditTime: 2024-04-12 16:54:33
+ * @LastEditTime: 2024-04-12 17:36:37
  * @FilePath: \Vue3-big-event-admin\src\views\article\ArticleManage.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -16,20 +16,21 @@ import { formatTime } from '@/utils/format'
 
 const articleList = ref([])
 const total = ref(0)
+const loading = ref(false)
 
 const params = ref({
-  pagenum: 1,
-  pagesize: 2,
+  pagenum: 2,
+  pagesize: 3,
   cate_id: '',
   state: ''
 })
 
 const getArticleList = async () => {
-  // console.log('???')
-  // console.log(params.value)
+  loading.value = true
   const res = await artGetListService(params.value)
   articleList.value = res.data.data
   total.value = res.data.total
+  loading.value = false
 }
 getArticleList()
 
@@ -38,6 +39,16 @@ const onEditArticle = (row) => {
 }
 const onDeleteArticle = (row) => {
   console.log(row)
+}
+
+const onSizeChange = (size) => {
+  params.value.pagenum = 1
+  params.value.pagesize = size
+  getArticleList()
+}
+const onCurrentChange = (page) => {
+  params.value.pagenum = page
+  getArticleList()
 }
 </script>
 
@@ -63,7 +74,7 @@ const onDeleteArticle = (row) => {
       </el-form-item>
     </el-form>
 
-    <el-table :data="articleList" style="width: 100%">
+    <el-table v-loading="loading" :data="articleList" style="width: 100%">
       <el-table-column
         prop="title"
         label="文章标题"
@@ -99,6 +110,18 @@ const onDeleteArticle = (row) => {
         <el-empty description="没有数据" />
       </template>
     </el-table>
+
+    <el-pagination
+      v-model:current-page="params.pagenum"
+      v-model:page-size="params.pagesize"
+      :page-sizes="[1, 3, 5, 7, 9]"
+      background
+      layout="jumper, total, sizes, prev, pager, next"
+      :total="total"
+      @size-change="onSizeChange"
+      @current-change="onCurrentChange"
+      style="margin-top: 20px; justify-content: flex-end"
+    />
   </page-container>
 </template>
 
