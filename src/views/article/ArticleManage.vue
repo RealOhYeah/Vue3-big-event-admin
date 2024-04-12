@@ -2,7 +2,7 @@
  * @Author: Oh...Yeah!!! 614988210@qq.com
  * @Date: 2024-04-01 10:36:01
  * @LastEditors: Oh...Yeah!!! 614988210@qq.com
- * @LastEditTime: 2024-04-12 17:48:23
+ * @LastEditTime: 2024-04-12 21:11:26
  * @FilePath: \Vue3-big-event-admin\src\views\article\ArticleManage.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -13,6 +13,7 @@ import { Edit, Delete } from '@element-plus/icons-vue'
 import ChannelSelect from '@/views/article/components/ChannelSelect.vue'
 import { artGetListService } from '../../api/article.js'
 import { formatTime } from '@/utils/format'
+import ArticleEdit from '@/views/article/components/ArticleEdit.vue'
 
 const articleList = ref([])
 const total = ref(0)
@@ -25,6 +26,7 @@ const params = ref({
   state: ''
 })
 
+// 获取文章列表
 const getArticleList = async () => {
   loading.value = true
   const res = await artGetListService(params.value)
@@ -34,27 +36,37 @@ const getArticleList = async () => {
 }
 getArticleList()
 
-const onEditArticle = (row) => {
-  console.log(row)
+const articleEditRef = ref()
+
+// 添加文章
+const onAddArticle = () => {
+  articleEditRef.value.open({})
 }
+// 修改文章
+const onEditArticle = (row) => {
+  articleEditRef.value.open(row)
+}
+// 删除文章
 const onDeleteArticle = (row) => {
   console.log(row)
 }
-
+// 改变每页的数据
 const onSizeChange = (size) => {
   params.value.pagenum = 1
   params.value.pagesize = size
   getArticleList()
 }
+// 页面跳转
 const onCurrentChange = (page) => {
   params.value.pagenum = page
   getArticleList()
 }
-
+// 搜索文章
 const onSearch = () => {
   params.value.pagenum = 1
   getArticleList()
 }
+// 重置
 const onReset = () => {
   params.value.pagenum = 1
   params.value.pagesize = 5
@@ -67,9 +79,10 @@ const onReset = () => {
 <template>
   <page-container title="文章管理">
     <template #extra>
-      <el-button>添加文章</el-button>
+      <el-button type="primary" @click="onAddArticle">添加文章</el-button>
     </template>
 
+    <!-- 表单区域 -->
     <el-form inline class="demo-form-inline">
       <el-form-item label="文章分类：">
         <channel-select v-model="params.cate_id"></channel-select>
@@ -86,6 +99,7 @@ const onReset = () => {
       </el-form-item>
     </el-form>
 
+    <!-- 表格区域 -->
     <el-table v-loading="loading" :data="articleList" style="width: 100%">
       <el-table-column
         prop="title"
@@ -123,6 +137,7 @@ const onReset = () => {
       </template>
     </el-table>
 
+    <!-- 分页区域 -->
     <el-pagination
       v-model:current-page="params.pagenum"
       v-model:page-size="params.pagesize"
@@ -134,6 +149,9 @@ const onReset = () => {
       @current-change="onCurrentChange"
       style="margin-top: 20px; justify-content: flex-end"
     />
+
+    <!-- 抽屉 -->
+    <article-edit ref="articleEditRef"></article-edit>
   </page-container>
 </template>
 
