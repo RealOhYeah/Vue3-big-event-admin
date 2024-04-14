@@ -2,7 +2,7 @@
  * @Author: Oh...Yeah!!! 614988210@qq.com
  * @Date: 2024-04-09 16:13:55
  * @LastEditors: Oh...Yeah!!! 614988210@qq.com
- * @LastEditTime: 2024-04-14 10:43:01
+ * @LastEditTime: 2024-04-14 12:31:11
  * @FilePath: \Vue3-big-event-admin\src\api\article.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -36,3 +36,14 @@ export const artGetListService = (params) =>
 
 // 添加文章
 export const artPublishService = (data) => request.post('/my/article/add', data)
+
+// 获取文章详情
+export const artGetDetailService = (id) =>
+  request.get('my/article/info', { params: { id } })
+
+// 编辑文章
+export const artEditService = (data) => request.put('my/article/info', data)
+
+// 删除文章
+export const artDelService = (id) =>
+  request.delete('my/article/info', { params: { id } })

@@ -2,7 +2,7 @@
  * @Author: Oh...Yeah!!! 614988210@qq.com
  * @Date: 2024-04-01 10:36:01
  * @LastEditors: Oh...Yeah!!! 614988210@qq.com
- * @LastEditTime: 2024-04-14 11:09:41
+ * @LastEditTime: 2024-04-14 12:36:37
  * @FilePath: \Vue3-big-event-admin\src\views\article\ArticleManage.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -11,7 +11,7 @@
 import { ref } from 'vue'
 import { Edit, Delete } from '@element-plus/icons-vue'
 import ChannelSelect from '@/views/article/components/ChannelSelect.vue'
-import { artGetListService } from '../../api/article.js'
+import { artGetListService, artDelService } from '../../api/article.js'
 import { formatTime } from '@/utils/format'
 import ArticleEdit from '@/views/article/components/ArticleEdit.vue'
 
@@ -44,11 +44,26 @@ const onAddArticle = () => {
 }
 // 修改文章
 const onEditArticle = (row) => {
+  // const loadingInstance = ElLoading.service({
+  //   lock: true, //是否锁定
+  //   text: '拼命加载中...', //显示在加载图标下方的加载文案
+  //   background: 'rgba(0,0,0,.7)' //遮罩背景色
+  // })
+
   articleEditRef.value.open(row)
+
+  // loadingInstance.close()
 }
 // 删除文章
-const onDeleteArticle = (row) => {
-  console.log(row)
+const onDeleteArticle = async (row) => {
+  await ElMessageBox.confirm('你确认删除该文章信息吗？', '温馨提示', {
+    type: 'warning',
+    confirmButtonText: '确认',
+    cancelButtonText: '取消'
+  })
+  await artDelService(row.id)
+  ElMessage({ type: 'success', message: '删除成功' })
+  getArticleList()
 }
 // 改变每页的数据
 const onSizeChange = (size) => {
